@@ -1,0 +1,20 @@
+{
+    "name": "mkrymchak/life",
+    "description": "Game of Life in PHP.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maksym Krymchak",
+            "email": "maxim.krymchak@gmail.com"
+        }
+    ],
+    "require": {
+        "nikic/iter": "~1.0"
+    },
+    "require-dev": {
+        "docopt/docopt": "dev-master"
+    },
+    "autoload": {
+        "files": ["src/life.php", "src/parser.php"]
+    }
+}

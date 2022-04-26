@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../vendor/docopt/docopt/src/docopt.php';
+
+$doc = <<<'DOCOPT'
+Game of Life in PHP.
+
+Usage:
+  life run    [--width=25] [--height=25] [-n=INF] [-p] [--] <file>
+  life (-h | --help)
+
+Options:
+  -h --help         Show this screen.
+  --width=          Width of the world.
+  --height=         Height of the world.
+  -n=               Number of generations/iterations.
+  -p                Initial patern as file name.
+
+DOCOPT;
+
+$h = new \Docopt\Handler;
+$args = $h->handle($doc);
+
+if (!file_exists($args['<file>'])) {
+    echo "ERROR: Non-existent file {$args['<file>']} provided.\n";
+    exit(1);
+}
+
+$width  = isset($args['--width']) ? (int) $args['--width'] : 120;
+$height = isset($args['--height']) ? (int) $args['--height'] : 50;
+$n      = isset($args['-n']) ? (int) $args['-n'] : INF;
+
+if ($args['-r']) {
+    $world = mkrymchak\life\parse(file_get_contents($args['<file>']));
+}
+
+foreach (range(0, $height-1) as $y) {
+    foreach (range(0, $width-1) as $x) {
+        if (!isset($world[$y][$x])) {
+            $world[$y][$x] = 0;
+        }
+    }
+}
+
+if ($args['run']) {
+    foreach (mkrymchak\life\run($world, $n) as $world) {
+        system('clear');
+        mkrymchak\life\show_world($world);
+        usleep(50000);
+    }
+    exit(0);
+}
